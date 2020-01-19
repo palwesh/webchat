@@ -1,0 +1,36 @@
+{% extends "index.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+
+{% block content %}
+
+<div class="container">
+    <center><h1>Users</h1></center>
+
+<p style="color: white;">Chosse user to chat</p>
+<ul>
+
+
+    {% for user in object_list %}
+
+
+   {% if user != request.user %}
+
+   
+
+   <li>  <a href="/messages/{{ user.username }}">{{ user.username }} </a> </li>
+  
+   <br>
+   {% endif %}
+
+    
+
+    {% endfor %}
+
+
+</ul>
+
+</div>
+
+{% endblock %}

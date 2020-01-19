@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content%}
+<br>
+<center>
+    <h1>Welcome !</h1>
+    
+    </center>
+
+<br>
+
+<div class="container">
+
+<p>Click here for Chat </p>
+
+<center>
+    <a href="{% url 'userlist' %}"><button class="primaryAction button_black"  type="submit">Chat</button></a>
+</center>  
+
+</div>
+{% endblock %}

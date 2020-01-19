@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3 style="color: blue;" >{% if user != object.first %}{{ object.first }}{% else %}{{ object.second }}{% endif %}</h3>
+<ul id='chat-items'>
+{% for chat in object.chatmessage_set.all %}
+
+    <li><span><span class="badge badge-pill badge-primary ">{{ chat.user.username }}</span> <span class="" style="font-size: 18px;">{{ chat.message }}</span></span></li>
+
+{% endfor %}
+</ul>
+
+<form id='form' method='POST'> {% csrf_token %}
+    <input type="hidden" name="" id="myUsername" value="{{ user.username }} ">
+{{form.as_p }}
+<input type='submit' class='btn btn-primary'/>
+</form>
+
+{% endblock %}
+
+{% block script %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+
+<script>
+// websocket scripts
+//console.log(window.location)
+var fromData = $("#form")
+var msgInput = $("id_message")
+
+var chatHolder = $('chat-items')
+var me = $('#myUsername').val()
+
+
+var loc = window.location
+var wsStart = 'ws://'
+if (loc.protocol == 'http:'){
+    wsStart = 'wss://'
+}
+
+// if (loc.protocol == 'https:'){
+//     wsStart = 'wss://'
+// }
+
+var endpoint = wsStart + loc.host + loc.pathname
+var socket = new ReconnectingWebSocket(endpoint)
+// var socket = new webSocket(endpoint)
+ 
+
+socket.onmessage = function(e){
+    // console.log("message", e)
+    var chatdataMsg = JSON.parse(e.data)
+    
+
+    chatHolder.append("<li>"+  msgText + "by-" + chatdataMsg.username + "</li>")
+}
+
+
+
+
+socket.onopen = function(e){ 
+    console.log("open", e)
+    fromData.submit(function(event){ 
+        event.preventDefault()
+        var msgText = msgInput.val()
+        var finalData = {
+            'message':msgText
+        }
+        socket.send(JSON.stringify(finalData))
+        fromData[0].reset()
+    })
+}
+
+
+
+
+ 
+socket.oneror = function(e){
+    console.log("error", e)
+}
+
+
+
+socket.onclose = function(e){
+    console.log("close", e)
+}
+
+ 
+socket.onmessage
+socket.onopen
+socket.onerror
+socket.onclose
+
+</script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% load static %}
+<nav>
+    <ul>
+    {% if user.is_authenticated %}
+        <li style="float:right"><a class="active" href="{% url 'account_logout' %}">Log Out</a></li>
+        <li style="float:left"><a class="" href="{% url 'home' %}"> Hi {{ user.username }}!</a></li>
+    {% else %}
+        <li style="float:left"><a class="" href="{% url 'home' %}"> Welcome</a></li>
+        <li style="float:right"><a class="active" href="{% url 'account_login' %}">Log In</a></li>
+    {% endif %}
+    </ul>
+</nav>
